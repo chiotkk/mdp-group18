@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">MDP</string>
+    <string name="setWaypoint">Set Waypoint</string>
+    <string name="setStart">Set Start Point</string>
+    <string name="onWaypoint">Selecting Waypoint</string>
+    <string name="onStart">Selecting Start Point</string>
 </resources>
