@@ -77,9 +77,9 @@ public class HomeFragment extends Fragment {
         onClickNavigationLeft();
         onClickSetWaypoint();
         onClickSetStartPoint();
-        //onClickStartShortestPath();
+        onClickStartFastestPath();
         onClickStartExploration();
-        //onClickAutoOrManualUpdate();
+        onClickAutoOrManualUpdate();
 
     }
 
@@ -170,7 +170,7 @@ public class HomeFragment extends Fragment {
     }
 
     //setting up onClickListener for waypoint toggle button. Press the button and select the waypoint on the map
-    public void onClickSetWaypoint(){
+    public void onClickSetWaypoint() {
         tb_setWaypointCoord = getActivity().findViewById(R.id.tb_setWaypointCoord);
         tb_setWaypointCoord.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -179,7 +179,7 @@ public class HomeFragment extends Fragment {
                 if (connectedDevice == null) {
                     Toast.makeText(getContext(), "Please connect to a device first", Toast.LENGTH_SHORT).show();
                 } else {
-                    if(isChecked){
+                    if (isChecked) {
                         //toggle is enabled; select waypoint on the map
                         //TODO: Use the function in map to set waypoint
 
@@ -192,7 +192,7 @@ public class HomeFragment extends Fragment {
     }
 
     //setting up onClickListener for starting point toggle button. Press the button and select the starting point on the map
-    public void onClickSetStartPoint(){
+    public void onClickSetStartPoint() {
         tb_setStartCoord = getActivity().findViewById(R.id.tb_setStartCoord);
         tb_setStartCoord.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -201,7 +201,7 @@ public class HomeFragment extends Fragment {
                 if (connectedDevice == null) {
                     Toast.makeText(getContext(), "Please connect to a device first", Toast.LENGTH_SHORT).show();
                 } else {
-                    if(isChecked){
+                    if (isChecked) {
                         //toggle is enabled: select the starting coordinates on the map
                         //TODO: Use the function in map to set starting coordinates and starting direction for the robot
 
@@ -214,7 +214,7 @@ public class HomeFragment extends Fragment {
     }
 
     // Start Exploration button
-    public void onClickStartExploration(){
+    public void onClickStartExploration() {
         tb_exploration = getActivity().findViewById(R.id.tb_exploration);
         tb_exploration.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -224,6 +224,51 @@ public class HomeFragment extends Fragment {
                     if (isChecked) {
                         // The toggle is enabled; Start Exploration Mode
                         //startExploration();
+                    }
+                }
+            }
+        });
+    }
+
+    //set up onClickListener for fastest path
+    public void onClickStartFastestPath() {
+        tb_fastestpath = getActivity().findViewById(R.id.tb_fastestpath);
+        tb_fastestpath.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (connectedDevice == null) {
+                    Toast.makeText(getContext(), "Please connect to bluetooth device first!", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (isChecked) {
+                        //The toggle is enabled: start fastest path mode
+                        //startFastestPath();
+                    }
+                }
+            }
+        });
+
+    }
+
+    //set up onClickListener for manual/auto update of the map
+    public void onClickAutoOrManualUpdate() {
+        tb_autoManual = getActivity().findViewById(R.id.tb_autoManual);
+        tb_autoManual.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (connectedDevice == null) {
+                    Toast.makeText(getContext(), "Please connect to bluetooth device first!", Toast.LENGTH_SHORT).show();
+                } else {
+                    if(isChecked){
+                        //The toggle is enabled: manual mode on
+                        Toast.makeText(getContext(), "Manual Mode enabled", Toast.LENGTH_SHORT).show();
+                        //TODO: Perform the related functions with the map to enable manual mode
+                        Log.d(TAG, "Auto updates disabled.");
+                    }
+                    else{
+                        //Toggle is not enabled: that means auto mode is on
+                        Toast.makeText(getContext(), "Auto Mode enabled", Toast.LENGTH_SHORT).show();
+                        //TODO: Perform related functions with the map in order to enable auto mode
+                        Log.d(TAG, "Auto updates enabled.");
                     }
                 }
             }
