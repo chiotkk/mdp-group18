@@ -29,19 +29,21 @@ import java.nio.charset.Charset;
 import java.util.UUID;
 
 import ntu.mdp.grp18.MainActivity;
+import ntu.mdp.grp18.PixelGridView;
 import ntu.mdp.grp18.R;
 
 public class HomeFragment extends Fragment {
-
+    //Declaring variable for the map i.e. the PixelGridView
+    PixelGridView map;
     // Declarations for the main screen with map
     ImageButton forwardButton, leftButton, rightButton, reverseButton;
     TextView tv_roboStatus, tv_myStringCmd;
+    Button btn_update;
     ToggleButton tb_setWaypointCoord, tb_setStartCoord, tb_autoManual, tb_fastestpath, tb_exploration;
     private static final String TAG = "HomeFragment";
 
 
     //Declarations for the bluetooth connection
-    private static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     BluetoothDevice myBTConnectionDevice;
     static String connectedDevice;
     boolean connectedState;
@@ -80,6 +82,7 @@ public class HomeFragment extends Fragment {
         onClickStartFastestPath();
         onClickStartExploration();
         onClickAutoOrManualUpdate();
+        onClickUpdateBtn();
 
     }
 
@@ -97,9 +100,12 @@ public class HomeFragment extends Fragment {
                             Toast.LENGTH_SHORT).show();
                 } else {
 
-                    //TODO: send message to RPI using btChat to tell the bot to move forward
+                    //TODO: send command based on protocol to RPI using btChat to tell the bot to move forward
 
                     Log.d(TAG, "Android Controller: Move Forward");
+                    tv_roboStatus.append("Moving/n");
+                    tv_myStringCmd.append("Android Controller: Move Forward");
+                    map.moveForward();
                 }
 
             }
@@ -124,8 +130,10 @@ public class HomeFragment extends Fragment {
                     //TODO: send message to RPI using btChat to tell the bot to move in reverse direction
 
                     Log.d(TAG, "Android Controller: Move Backwards");
+                    tv_roboStatus.append("Moving\n");
+                    tv_myStringCmd.append("Android Controller: Rotate 180 \n");
+                    map.moveBackwards();
                 }
-
             }
 
         });
@@ -145,6 +153,9 @@ public class HomeFragment extends Fragment {
                     //TODO: send message to RPI using btChat to tell the bot to rotate in left direction
 
                     Log.d(TAG, "Android Controller: Move Left");
+                    tv_roboStatus.append("Moving\n");
+                    tv_myStringCmd.append("Android Controller: Turn Left\n");
+                    map.rotateLeft();
                 }
             }
         });
@@ -164,6 +175,9 @@ public class HomeFragment extends Fragment {
                     //TODO: send message to RPI using btChat to tell the bot to rotate in right direction
 
                     Log.d(TAG, "Android Controller: Move Right");
+                    tv_roboStatus.append("Moving\n");
+                    tv_myStringCmd.append("Android Controller: Turn Right\n");
+                    map.rotateRight();
                 }
             }
         });
@@ -181,8 +195,7 @@ public class HomeFragment extends Fragment {
                 } else {
                     if (isChecked) {
                         //toggle is enabled; select waypoint on the map
-                        //TODO: Use the function in map to set waypoint
-
+                        map.selectWayPoint();
                         //Change the button back to disabled once the waypoint has been set
                         tb_setWaypointCoord.toggle();
                     }
@@ -203,8 +216,8 @@ public class HomeFragment extends Fragment {
                 } else {
                     if (isChecked) {
                         //toggle is enabled: select the starting coordinates on the map
-                        //TODO: Use the function in map to set starting coordinates and starting direction for the robot
-
+                        map.selectStartPoint();
+                        setStartDirection();
                         //Change the button back to disabled once the waypoint has been set
                         tb_setStartCoord.toggle();
                     }
@@ -223,7 +236,7 @@ public class HomeFragment extends Fragment {
                 } else {
                     if (isChecked) {
                         // The toggle is enabled; Start Exploration Mode
-                        //startExploration();
+                        startExploration();
                     }
                 }
             }
@@ -241,7 +254,7 @@ public class HomeFragment extends Fragment {
                 } else {
                     if (isChecked) {
                         //The toggle is enabled: start fastest path mode
-                        //startFastestPath();
+                        startFastestPath();
                     }
                 }
             }
@@ -258,19 +271,52 @@ public class HomeFragment extends Fragment {
                 if (connectedDevice == null) {
                     Toast.makeText(getContext(), "Please connect to bluetooth device first!", Toast.LENGTH_SHORT).show();
                 } else {
-                    if(isChecked){
+                    if (isChecked) {
                         //The toggle is enabled: manual mode on
+
+                        // Direction buttons are disabled
+                        // Update button is enabled
+                        btn_update.setEnabled(true);
+                        forwardButton.setEnabled(false);
+                        leftButton.setEnabled(false);
+                        rightButton.setEnabled(false);
+                        reverseButton.setEnabled(false);
                         Toast.makeText(getContext(), "Manual Mode enabled", Toast.LENGTH_SHORT).show();
-                        //TODO: Perform the related functions with the map to enable manual mode
+                        map.setAutoUpdate(false);
                         Log.d(TAG, "Auto updates disabled.");
-                    }
-                    else{
+
+                    } else {
                         //Toggle is not enabled: that means auto mode is on
+
+                        // Update button is disabled
+                        // Direction buttons are enabled
+                        map.refreshMap(true);
+                        btn_update.setEnabled(false);
+                        forwardButton.setEnabled(true);
+                        leftButton.setEnabled(true);
+                        rightButton.setEnabled(true);
+                        reverseButton.setEnabled(true);
                         Toast.makeText(getContext(), "Auto Mode enabled", Toast.LENGTH_SHORT).show();
-                        //TODO: Perform related functions with the map in order to enable auto mode
+                        map.setAutoUpdate(true);
                         Log.d(TAG, "Auto updates enabled.");
                     }
                 }
+            }
+        });
+    }
+
+    //update button for updating the map when manual mode is on
+    public void onClickUpdateBtn() {
+        // Manual Mode; Update button
+        btn_update = (Button) getActivity().findViewById(R.id.update_btn);
+        btn_update.setEnabled(false);
+        btn_update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "Updating....");
+                map.refreshMap(true);
+                Log.d(TAG, "Update completed!");
+                Toast.makeText(getContext(), "Update completed", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -303,5 +349,57 @@ public class HomeFragment extends Fragment {
             Log.d(TAG, "Receiving incoming message: " + allMsg);
         }
     };
+
+    //Setting start point direction
+    public void setStartDirection() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Select Robot Direction")
+                .setItems(R.array.directions_array, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int i) {
+                        map.setRobotDirection(i);
+                        dialog.dismiss();
+                        Log.d(TAG, "Start Point Direction set");
+                    }
+                });
+        builder.create();
+        builder.create().show();
+    }
+
+    // Function to send the  Algo the command to start Exploration
+    //Triggered by the click of the explore button
+    public void startExploration() {
+        Toast.makeText(getContext(), "Exploration started", Toast.LENGTH_SHORT).show();
+        //TODO: Send the command on the output stream to start exploration
+
+        Log.d(TAG, "Android Controller: Start Exploration");
+        tv_myStringCmd.append("Start Exploration\n");
+        tv_roboStatus.append("Moving\n");
+    }
+
+    // End Exploration
+    public void endExploration() {
+        Log.d(TAG, "Algorithm: End Exploration");
+        tv_myStringCmd.append("End Exploration\n");
+        tv_roboStatus.append("Stop\n");
+        Toast.makeText(getContext(), "Exploration ended", Toast.LENGTH_SHORT).show();
+    }
+
+    // Start Fastest Path
+    public void startFastestPath() {
+        Toast.makeText(getContext(), "Fastest Path started", Toast.LENGTH_SHORT).show();
+        //TODO: Send the command to the algo using btChat to start the fastest path
+
+        Log.d(TAG, "Android Controller: Start Fastest Path");
+        tv_myStringCmd.append("Start Fastest Path\n");
+        tv_roboStatus.append("Moving\n");
+    }
+
+    // End Fastest Path
+    public void endFastestPath() {
+        Log.d(TAG, "Algorithm: Fastest Path Ended.");
+        tv_myStringCmd.append("End Fastest Path\n");
+        tv_roboStatus.append("Stop\n");
+        Toast.makeText(getContext(), "Fastest Path ended", Toast.LENGTH_SHORT).show();
+    }
 
 }

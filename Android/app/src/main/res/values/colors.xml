@@ -4,4 +4,14 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="dark_gray">#A9A9A9</color>
+    <color name="black">#000000</color>
+    <color name="aquamarine">#7FFFD4</color>
+    <color name="tomato">#FF6347</color>
+    <color name="floral_white">#FFFAF0</color>
+    <color name="slate_gray">#708090</color>
+    <color name="pale_turquoise">#AFEEEE</color>
+    <color name="pink">#FFC0CB</color>
+    <color name="red">#FF0000</color>
+    <color name="cold">#FFD700</color>
 </resources>

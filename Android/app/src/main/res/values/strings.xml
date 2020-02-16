@@ -4,4 +4,5 @@
     <string name="setStart">Set Start Point</string>
     <string name="onWaypoint">Selecting Waypoint</string>
     <string name="onStart">Selecting Start Point</string>
+    <string name="update">UPDATE</string>
 </resources>
