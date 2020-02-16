@@ -1,7 +1,11 @@
 package ntu.mdp.grp18;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
@@ -157,6 +161,16 @@ public class PixelGridView extends View {
         return pos;
     }
 
+    // Get Start Position
+    public int[] getStartPos() {
+        int[] startPos = new int[4];
+        startPos[0] = this.frontStartPos;
+        startPos[1] = this.leftStartPos;
+        startPos[2] = this.backStartPos;
+        startPos[3] = this.rightStartPos;
+        return startPos;
+    }
+
     // Set current position (integers)
     public void setCurPos(int row, int column) {
         int[] edges = convertRobotPosToEdge(row, column);
@@ -178,6 +192,24 @@ public class PixelGridView extends View {
         this.rightCurPos = pos[3];
 
         this.refreshMap(this.getAutoUpdate());
+    }
+
+    // Set Arrow coordinates
+    public void setArrowImageCoord(String x, String y, String face) {
+        String[] arrowImageCoord = new String[3];
+        arrowImageCoord[0] = x;
+        arrowImageCoord[1] = y;
+        arrowImageCoord[2] = face;
+
+        this.arrowImageCoords.add(arrowImageCoord);
+
+        // Update map
+        this.refreshMap(this.getAutoUpdate());
+    }
+
+    // Get Arrow coordinates
+    public ArrayList<String[]> getArrowImageCoords() {
+        return this.arrowImageCoords;
     }
 
     // Convert Robot Position to Edge
@@ -202,6 +234,12 @@ public class PixelGridView extends View {
         return (19 - rowNum);
     }
 
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        calculateDimensions();
+    }
+
     // Calculate dimensions
     private void calculateDimensions() {
         if (numColumns < 1 || numRows < 1) {
@@ -221,6 +259,48 @@ public class PixelGridView extends View {
         cellExplored = new boolean[getNumColumns()][getNumRows()];
 
         invalidate();
+    }
+
+    // For drawing the map
+    //Functioned called mandatorily whenever the map is drawn
+    @Override
+    protected void onDraw(Canvas canvas) {
+        int pos[] = this.getCurPos();
+        if (numColumns == 0 || numRows == 0) {
+            return;
+        }
+
+        int width = cellWidth * getNumColumns();
+        Log.d(TAG, "mapwidth = " + width);
+        int height = cellHeight * getNumRows();
+        Log.d(TAG, "mapheight = " + height);
+
+        for (int i = 0; i < numColumns; i++) {
+            for (int j = 0; j < numRows; j++) {
+                canvas.drawRect(i * cellWidth, j * cellHeight,
+                        (i + 1) * cellWidth, (j + 1) * cellHeight,
+                        grayPaint);
+            }
+        }
+
+        // vertical lines
+        for (int i = 1; i < numColumns; i++) {
+            canvas.drawLine(i * cellWidth, 0, i * cellWidth, height, blackPaint);
+        }
+
+        // horizontal lines
+        for (int i = 1; i < numRows; i++) {
+            canvas.drawLine(0, i * cellHeight, width, i * cellHeight, blackPaint);
+        }
+
+        this.setExploredMapping(canvas, lightGrayPaint);
+        this.setStartPointColor(canvas, greenPaint);
+        this.setEndPointColor(canvas, 18, 13, redPaint);
+        if (this.wayPoint != null)
+            this.setWayPointColor(canvas, waypointPaint);
+        this.robotPosMapping(canvas, pos, robotDirection);
+        this.obstacleMapping(canvas);
+        this.arrowMapping(canvas);
     }
 
     // Set Start Point Coordinates
@@ -360,6 +440,22 @@ public class PixelGridView extends View {
         this.exploredTile();
     }
 
+    // Convert tile to edge
+    public int[] convertTileToEdge ( int row, int column){
+        int rowFormatConvert = inverseRowCoord(row);
+        int topEdge, leftEdge, bottomEdge, rightEdge;
+        topEdge = rowFormatConvert;
+        leftEdge = column;
+        bottomEdge = rowFormatConvert + 1;
+        rightEdge = column + 1;
+        int[] edges = new int[4];
+        edges[0] = topEdge;
+        edges[1] = leftEdge;
+        edges[2] = bottomEdge;
+        edges[3] = rightEdge;
+        return edges;
+    }
+
     // Turn Left
     public void rotateLeft() {
         int dir = this.getRobotDirection();
@@ -427,7 +523,7 @@ public class PixelGridView extends View {
     }
 
     // Select Start Point
-    public void selectStartPoint () {
+    public void selectStartPoint() {
         Log.d(TAG, "Setting Start Point...");
         selectStartPosition = true;
     }
@@ -464,6 +560,192 @@ public class PixelGridView extends View {
         }
 
         return true;
+    }
+
+    // Explored Map
+    public void setExploredMapping(Canvas canvas, Paint exploredColor) {
+        boolean[][] exploredCell = this.getCellExplored();
+
+        for (int i = 0; i < this.getNumColumns(); i++) {
+            for (int j = 0; j < this.getNumRows(); j++) {
+                if (exploredCell[i][j]) {
+                    canvas.drawRect(i * cellWidth, (19 - j) * cellHeight,
+                            (i + 1) * cellWidth, (20 - j) * cellHeight,
+                            exploredColor);
+                }
+            }
+        }
+        // vertical lines
+        for (int i = 1; i < this.getNumColumns(); i++) {
+            canvas.drawLine(i * cellWidth, 0, i * cellWidth, (float) 1.2 * this.getHeight(), blackPaint);
+        }
+
+
+        // horizontal lines
+        for (int i = 1; i < this.getNumRows(); i++) {
+            canvas.drawLine(0, i * cellHeight, this.getWidth(), i * cellHeight, blackPaint);
+        }
+    }
+
+    // Set Start Point Color
+    public void setStartPointColor(Canvas canvas, Paint colorStart) {
+
+        int[] startPointEdges = this.getStartPos();
+        for (int i = startPointEdges[1]; i <= startPointEdges[3]; i++) {
+            for (int j = startPointEdges[0]; j <= startPointEdges[2]; j++) {
+                canvas.drawRect(i * cellWidth, j * cellHeight,
+                        (i + 1) * cellWidth, (j + 1) * cellHeight,
+                        colorStart);
+            }
+        }
+    }
+
+    // Set End Point Color
+    public void setEndPointColor(Canvas canvas, int row, int column, Paint colorEnd) {
+        int[] endPointEdges = convertRobotPosToEdge(row, column);
+        for (int i = endPointEdges[1]; i <= endPointEdges[3]; i++) {
+            for (int j = endPointEdges[0]; j <= endPointEdges[2]; j++) {
+                canvas.drawRect(i * cellWidth, j * cellHeight,
+                        (i + 1) * cellWidth, (j + 1) * cellHeight,
+                        colorEnd);
+            }
+        }
+    }
+
+    // Set Waypoint Color
+    private void setWayPointColor(Canvas canvas, Paint wayPointPaint) {
+
+        int[] wayPoint = this.getWayPoint();
+        int[] wayPointEdges = this.convertTileToEdge(wayPoint[1], wayPoint[0]);
+
+        for (int i = wayPointEdges[1]; i < wayPointEdges[3]; i++) {
+            for (int j = wayPointEdges[0]; j < wayPointEdges[2]; j++) {
+                canvas.drawRect(i * cellWidth, j * cellHeight,
+                        (i + 1) * cellWidth, (j + 1) * cellHeight,
+                        wayPointPaint);
+            }
+        }
+
+    }
+
+    // Map Robot Position
+    public void robotPosMapping(Canvas canvas, int[] pos, int robotDirection) {
+
+        for (int i = Math.min(pos[1], pos[3]); i <= Math.max(pos[1], pos[3]); i++) {
+            for (int j = Math.min(pos[0], pos[2]); j <= Math.max(pos[0], pos[2]); j++) {
+                canvas.drawRect(i * cellWidth, j * cellHeight,
+                        (i + 1) * cellWidth, (j + 1) * cellHeight,
+                        yellowPaint);
+            }
+        }
+
+
+        // head color
+        // front
+        if (robotDirection == 0) {
+            canvas.drawRect((pos[1] + 1) * cellWidth, pos[0] * cellHeight,
+                    (pos[3]) * cellWidth, (pos[2] - 1) * cellHeight,
+                    bluePaint);
+        }
+
+        // left
+        else if (robotDirection == 1) {
+            canvas.drawRect((pos[1]) * cellWidth, (pos[0] + 1) * cellHeight,
+                    (pos[3] - 1) * cellWidth, (pos[2]) * cellHeight,
+                    bluePaint);
+        }
+
+        // back
+        else if (robotDirection == 2) {
+            canvas.drawRect((pos[1] + 1) * cellWidth, (pos[0] + 2) * cellHeight,
+                    (pos[3]) * cellWidth, (pos[2] + 1) * cellHeight,
+                    bluePaint);
+        }
+
+        // right
+        else if (robotDirection == 3) {
+            canvas.drawRect((pos[1] + 2) * cellWidth, (pos[0] + 1) * cellHeight,
+                    (pos[3] + 1) * cellWidth, (pos[2]) * cellHeight,
+                    bluePaint);
+        }
+    }
+
+    // Map obstacles
+    public void obstacleMapping(Canvas canvas) {
+        boolean[][] obstacle = this.getObstacles();
+        for (int i = 0; i < this.getNumColumns(); i++) {
+            for (int j = 0; j < this.getNumRows(); j++) {
+                if (obstacle[i][j]) {
+                    canvas.drawRect(i * cellWidth, (19 - j) * cellHeight,
+                            (i + 1) * cellWidth, (20 - j) * cellHeight,
+                            obstaclePaint);
+                }
+            }
+        }
+    }
+
+    // Map Images
+    public void arrowMapping(Canvas canvas) {
+        ArrayList<String[]> arrowImageCoords = this.getArrowImageCoords();
+        if (arrowImageCoords.size() == 0) return;
+        RectF rect;
+
+        for (int i = 0; i < arrowImageCoords.size(); i++) {
+
+            rect = new RectF(Integer.parseInt(arrowImageCoords.get(i)[0]) * cellWidth, (19 - Integer.parseInt(arrowImageCoords.get(i)[1])) * cellHeight,
+                    (Integer.parseInt(arrowImageCoords.get(i)[0]) + 1) * cellWidth, (20 - Integer.parseInt(arrowImageCoords.get(i)[1])) * cellHeight);
+
+            if (arrowImageCoords.get(i)[2].equals("1")) {
+                Bitmap arrowBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.number_one);
+                canvas.drawBitmap(arrowBitmap, null, rect, null);
+
+            } else if (arrowImageCoords.get(i)[2].equals("2")) {
+                Bitmap arrowBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.number_two);
+                canvas.drawBitmap(arrowBitmap, null, rect, null);
+
+            } else if (arrowImageCoords.get(i)[2].equals("3")) {
+                Bitmap arrowBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.number_three);
+                canvas.drawBitmap(arrowBitmap, null, rect, null);
+            } else if (arrowImageCoords.get(i)[2].equals("4")) {
+                Bitmap arrowBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.arrow_red);
+                canvas.drawBitmap(arrowBitmap, null, rect, null);
+            } else if (arrowImageCoords.get(i)[2].equals("5")) {
+                Bitmap arrowBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.number_five);
+                canvas.drawBitmap(arrowBitmap, null, rect, null);
+            } else if (arrowImageCoords.get(i)[2].equals("6")) {
+                Bitmap arrowBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.letter_a);
+                canvas.drawBitmap(arrowBitmap, null, rect, null);
+            } else if (arrowImageCoords.get(i)[2].equals("7")) {
+                Bitmap arrowBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.letter_b);
+                canvas.drawBitmap(arrowBitmap, null, rect, null);
+            } else if (arrowImageCoords.get(i)[2].equals("8")) {
+                Bitmap arrowBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.arrow_blue);
+                canvas.drawBitmap(arrowBitmap, null, rect, null);
+            } else if (arrowImageCoords.get(i)[2].equals("9")) {
+                Bitmap arrowBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.letter_d);
+                canvas.drawBitmap(arrowBitmap, null, rect, null);
+            } else if (arrowImageCoords.get(i)[2].equals("10")) {
+                Bitmap arrowBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.letter_e);
+                canvas.drawBitmap(arrowBitmap, null, rect, null);
+            } else if (arrowImageCoords.get(i)[2].equals("11")) {
+                Bitmap arrowBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.arrow_green);
+                canvas.drawBitmap(arrowBitmap, null, rect, null);
+            } else if (arrowImageCoords.get(i)[2].equals("12")) {
+                Bitmap arrowBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.circle_yellow);
+                canvas.drawBitmap(arrowBitmap, null, rect, null);
+            } else if (arrowImageCoords.get(i)[2].equals("13")) {
+                Bitmap arrowBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.arrow_white);
+                canvas.drawBitmap(arrowBitmap, null, rect, null);
+            } else if (arrowImageCoords.get(i)[2].equals("14")) {
+                Bitmap arrowBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.number_four);
+                canvas.drawBitmap(arrowBitmap, null, rect, null);
+            } else if (arrowImageCoords.get(i)[2].equals("15")) {
+                Bitmap arrowBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.letter_c);
+                canvas.drawBitmap(arrowBitmap, null, rect, null);
+            }
+
+
+        }
     }
 
 }
