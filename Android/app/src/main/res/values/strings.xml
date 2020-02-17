@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">MDP</string>
 
+    <string name="setWaypoint">Set Waypoint</string>
+    <string name="setStart">Set Start Point</string>
+    <string name="onWaypoint">Selecting Waypoint</string>
+    <string name="onStart">Selecting Start Point</string>
+    <string name="update">UPDATE</string>
+
     <string name="pref_command_change">Change communication commands</string>
     <string name="pref_direction_change">Change direction commands</string>
     <string name="pref_strafe_left">Strafe Left</string>
@@ -14,7 +20,7 @@
     <string name="pref_reverse">Reverse</string>
     <string name="pref_reverse_default">r</string>
     <string name="pref_rotate_right">Rotate Right</string>
-    <string name="pref_rotate_right_default">tr</string>
+    <string name="pref_rotate_right_default">tqr</string>
     <string name="pref_algo_change">Change operation commands</string>
     <string name="pref_begin_exploration">Begin Exploration</string>
     <string name="pref_begin_exploration_default">beginExplore</string>
