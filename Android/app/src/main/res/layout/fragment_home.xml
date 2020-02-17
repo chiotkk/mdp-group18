@@ -7,15 +7,14 @@
 
     tools:context="fragments.HomeFragment">
 
-    <TextView
+    <ntu.mdp.grp18.PixelGridView
         android:id="@+id/map"
         android:layout_width="429dp"
         android:layout_height="568dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="31dp"
-        android:layout_marginTop="27dp"
-        android:background="@drawable/textbar"/>
+        android:layout_marginTop="27dp" />
 
     <ImageButton
         android:id="@+id/rev_btn"
@@ -175,15 +174,26 @@
         android:layout_height="43dp"
         android:layout_below="@+id/tb_exploration"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="15dp"
         android:layout_marginStart="28dp"
+        android:layout_marginTop="15dp"
         android:layout_marginEnd="31dp"
         android:layout_toEndOf="@+id/map"
         android:textOff="Auto"
         android:textOn="Manual"
-        android:textSize="14dp" />
+        android:textSize="14sp" />
 
-
+    <Button
+        android:id="@+id/update_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="43dp"
+        android:layout_below="@+id/tb_autoManual"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="31dp"
+        android:layout_toEndOf="@+id/map"
+        android:text="@string/update"
+        android:textSize="14sp" />
 
 
     <!-- </RelativeLayout>-->
