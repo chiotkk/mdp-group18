@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import ntu.mdp.grp18.fragments.BluetoothFragment;
+import ntu.mdp.grp18.fragments.HomeFragment;
 import ntu.mdp.grp18.fragments.OnBluetoothServiceBoundListener;
 import ntu.mdp.grp18.fragments.SettingsFragment;
 
@@ -47,9 +48,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        mapPageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+                setPageTitle("MAP");
+            }
+        });
+
         //Create default fragment
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new BluetoothFragment()).commit();
-        setPageTitle("BLUETOOTH");
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+        setPageTitle("MAP");
     }
 
     @Override

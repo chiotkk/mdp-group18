@@ -443,7 +443,7 @@ public class BluetoothService extends Service {
         intent.putExtra(EXTRA_STATE, state);
         intent.putExtra(EXTRA_DEVICE, device);
         sendBroadcast(intent);
-        Log.d(TAG, "broadcastState: sending...... ");
+        Log.d(TAG, "broadcastState: sending...... " + state + ": device: " + device.getName());
     }
 
     private void broadcastBtMessage(String message){

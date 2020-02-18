@@ -277,7 +277,9 @@ public class BluetoothFragment extends Fragment implements OnBluetoothServiceBou
                     break;
                 case BluetoothService.STATE_DISCONNECTED:
                     setVisibilitiesWithBluetoothState(getView(), BluetoothAdapter.STATE_DISCONNECTED);
-                    Log.d(TAG, "onReceive: " + device.getName() + " disconnected");
+                    if(device != null){
+                        Log.d(TAG, "onReceive: " + device.getName() + " disconnected");
+                    }
                     //test
                     Toast.makeText(getContext(), device.getName() + ": " + device.getAddress() + " disconnected", Toast.LENGTH_LONG).show();
                     break;
