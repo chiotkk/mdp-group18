@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/pink"
     android:orientation="vertical">
 
     <ScrollView
@@ -15,13 +15,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@color/colorPrimaryDark">
+            android:background="@color/pink">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@color/colorPrimary"
+                android:background="@color/light_pink"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
                 android:focusableInTouchMode="true">
@@ -74,7 +74,7 @@
                 android:id="@+id/paired_device_section"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorPrimary"
+                android:background="@color/light_pink"
                 android:layout_marginTop="15dp"
                 android:orientation="vertical"
                 android:paddingTop="5dp"
@@ -115,7 +115,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:background="@color/colorPrimary"
+                android:background="@color/light_pink"
                 android:orientation="vertical"
                 android:paddingBottom="15dp"
                 android:paddingTop="5dp"
@@ -166,7 +166,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
                 android:layout_marginTop="15dp"
-                android:background="@color/colorPrimary"
+                android:background="@color/light_pink"
                 android:orientation="vertical"
                 android:paddingBottom="5dp"
                 android:paddingTop="5dp">

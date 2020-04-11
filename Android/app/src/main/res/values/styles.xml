@@ -16,7 +16,7 @@
     </style>
 
     <style name="PreferenceThemeOverlay">
-        <item name="android:windowBackground">@color/colorPrimaryDark</item>
+        <item name="android:windowBackground">@color/light_pink</item>
         <item name="preferenceScreenStyle">@style/Preference.PreferenceScreen</item>
         <item name="preferenceFragmentStyle">@style/PreferenceFragment</item>
         <item name="preferenceCategoryStyle">@style/Preference.Category</item>
@@ -28,6 +28,7 @@
         <item name="editTextPreferenceStyle">@style/Preference.DialogPreference.EditTextPreference</item>
         <item name="preferenceFragmentListStyle">@style/PreferenceFragmentList</item>
     </style>
+
 
     <!-- Generic Dialog Theme -->
     <style name="AppCompatDialog" parent="Theme.AppCompat.Dialog">

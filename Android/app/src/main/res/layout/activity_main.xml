@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:orientation="horizontal"
-        android:background="@color/colorPrimaryDark">
+        android:background="@color/menuButtonColor">
 
         <TextView
             android:id="@+id/page_title"
@@ -36,8 +36,18 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@color/colorPrimaryDark">
+        android:layout_height="60dp"
+        android:background="@color/menuButtonColor">
+
+
+        <ImageButton
+            android:id="@+id/map_page_bottom_nav_btn"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:checked="true"
+            android:src="@drawable/ic_games_selector"
+            android:background="@color/menuButtonColor"/>
 
         <ImageButton
             android:id="@+id/bluetooth_page_bottom_nav_btn"
@@ -45,31 +55,23 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:src="@drawable/ic_bluetooth_selector"
-            android:background="#00000000"/>
-
-        <ImageButton
-            android:id="@+id/map_page_bottom_nav_btn"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_games_black_24dp"
-            android:background="#00000000"/>
+            android:background="@color/menuButtonColor"/>
 
         <ImageButton
             android:id="@+id/setting_page_bottom_nav_btn"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_settings_black_24dp"
-            android:background="#00000000"/>
+            android:src="@drawable/ic_settings_selector"
+            android:background="@color/menuButtonColor"/>
 
-        <ImageButton
+<!--        <ImageButton
             android:id="@+id/drive_page_bottom_nav_btn"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_handle_black_24dp"
-            android:background="#00000000"/>
+            android:src="@drawable/ic_handle_selector"
+            android:background="#c9abab"/>-->
 
     </LinearLayout>
 

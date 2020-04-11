@@ -58,7 +58,6 @@ public class ControlFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         return inflater.inflate(R.layout.fragment_control, container, false);
 
     }
@@ -187,6 +186,8 @@ public class ControlFragment extends Fragment{
         });
 
         Button updateMapBtn = getView().findViewById(R.id.update_map_btn);
+        updateMapBtn.setClickable(false);
+        updateMapBtn.setVisibility(View.INVISIBLE);
         updateMapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -392,12 +393,12 @@ public class ControlFragment extends Fragment{
         Button updateMapBtn = getView().findViewById(R.id.update_map_btn);
         if(isManual){
             updateMapBtn.setClickable(true);
-            updateMapBtn.setBackground(getResources().getDrawable(R.drawable.rounded_button));
+            updateMapBtn.setVisibility(View.VISIBLE);
             isMapAutoUpdate = false;
         }
         else{
             updateMapBtn.setClickable(false);
-            updateMapBtn.setBackground(getResources().getDrawable(R.drawable.rounded_button_unclickable));
+            updateMapBtn.setVisibility(View.INVISIBLE);
             isMapAutoUpdate = true;
         }
     }

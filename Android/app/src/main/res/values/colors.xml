@@ -6,4 +6,14 @@
     <color name="colorAccent">#D81B60</color>
     <color name="colorGrayLight">#999999</color>
     <color name="colorGray">#666666</color>
+    <color name="colorPrimaryMenu">#266053</color>
+    <color name="pink">#d25353</color>
+    <color name="super_light_pink">#e88</color>
+    <color name="light_pink">#d46b6b</color>
+    <color name="light_orange">#ffff8800</color>
+    <color name="orange">#ffe27d18</color>
+    <color name="light_blue">#ff00a2e8</color>
+    <color name="black">#ff000000</color>
+    <color name="menuButtonColor">#e7c8c8</color>
+    <color name="super_dark_pink">#292b57</color>
 </resources>

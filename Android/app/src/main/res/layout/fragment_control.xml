@@ -7,17 +7,25 @@
     android:layout_width="match_parent"
     android:fillViewport="true">
 
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".fragments.ControlFragment">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="700dp"
+            android:background="@color/super_dark_pink">
+
+        </LinearLayout>
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/map_container"
-            android:layout_marginEnd="150dp">
+            android:layout_marginEnd="150dp"
+            android:layout_marginTop="40dp">
 
             <ntu.mdp.grp18.MapCanvasView
                 android:id="@+id/map"
@@ -39,13 +47,60 @@
             android:layout_marginStart="-150dp"
             android:layout_toEndOf="@+id/map_container"
             android:layout_marginEnd="1dp"
-            android:layout_marginTop="1dp"
+            android:layout_marginTop="40dp"
             android:layout_marginBottom="1dp"
-            android:fillViewport="true">
+            android:background="@color/super_dark_pink"
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@color/super_dark_pink"
+                android:orientation="vertical">
+
+                <ToggleButton
+                    android:id="@+id/auto_manual_update_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/auto_manual_selector"
+                    android:textOff="Manual"
+                    android:textOn="Auto" />
+
+                <Button
+                    android:id="@+id/update_map_btn"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@drawable/auto_manual_selector2"
+                    android:text="Update"
+                    android:visibility="invisible"
+                    android:clickable="false"/>
+
+                <ToggleButton
+                    android:id="@+id/set_wp_btn"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:padding="12dp"
+                    android:background="@drawable/auto_manual_selector"
+                    android:textAlignment="textStart"
+                    android:textOn="Confirm Way Point"
+                    android:layout_marginTop="200dp"
+                    android:textOff="Set Way Point"/>
+
+                <ToggleButton
+                    android:id="@+id/set_robot_btn"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:padding="12dp"
+                    android:background="@drawable/auto_manual_selector"
+                    android:layout_marginEnd="1dp"
+                    android:textAlignment="textStart"
+                    android:textOn="Confirm Robot"
+                    android:textOff="Set Robot"/>
 
                 <TextView
                     android:id="@+id/map_descriptor_text_view"
@@ -54,7 +109,11 @@
                     android:text="P1: P2: Image:"
                     android:textSize="20sp"
                     android:textColor="#ffffff"
-                    android:background="#666666"/>
+                    android:background="#666666"
+                    android:visibility="gone"/>
+
+
+
 
             </LinearLayout>
 
@@ -65,55 +124,63 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:layout_below="@+id/map_container">
+            android:layout_below="@+id/map_container"
+            android:background="@color/super_dark_pink">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_weight="1"
                 android:layout_height="0dp"
+                android:layout_marginTop="40dp"
                 android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/exploration_btn"
-                    android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:background="@drawable/rounded_button"
                     android:layout_marginStart="1dp"
-                    android:text="E"/>
+                    android:layout_weight="1"
+                    android:drawableLeft="@drawable/explorelogo2"
+                    android:paddingLeft="30dip"
+                    android:background="@drawable/explore_fast_selector"
+                    android:text="Start Exploration" />
 
                 <Button
                     android:id="@+id/fastest_path_btn"
-                    android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:background="@drawable/rounded_button"
                     android:layout_marginEnd="1dp"
-                    android:text="F"/>
+                    android:layout_weight="1"
+                    android:drawableLeft="@drawable/fastestlogo"
+                    android:paddingLeft="30dip"
+                    android:background="@drawable/explore_fast_selector"
+                    android:text="Fastest Path" />
 
             </LinearLayout>
 
-            <LinearLayout
+            <!--<LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:background="@color/super_light_pink">>
 
                 <ToggleButton
                     android:id="@+id/auto_manual_update_btn"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:background="@drawable/rounded_button"
-                    android:textOff="Auto"
-                    android:textOn="Manual"/>
+                    android:background="@drawable/auto_manual_selector"
+                    android:textOff="Manual"
+                    android:textOn="Auto"/>
 
                 <Button
                     android:id="@+id/update_map_btn"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:background="@drawable/rounded_button_unclickable"
+                    android:background="@drawable/auto_manual_selector2"
                     android:text="Update"
+                    android:visibility="invisible"
                     android:clickable="false"/>
 
                 <ToggleButton
@@ -121,7 +188,7 @@
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:background="@drawable/rounded_button"
+                    android:background="@drawable/auto_manual_selector"
                     android:textOn="Confirm WP"
                     android:textOff="WP"/>
 
@@ -130,13 +197,13 @@
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:background="@drawable/rounded_button"
+                    android:background="@drawable/auto_manual_selector"
                     android:layout_marginEnd="1dp"
                     android:textOn="Confirm robot"
                     android:textOff="Robot"/>
 
 
-            </LinearLayout>
+            </LinearLayout>-->
 
         </LinearLayout>
 

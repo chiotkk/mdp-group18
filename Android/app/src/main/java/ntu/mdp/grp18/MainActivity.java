@@ -45,11 +45,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ImageButton bluetoothPageBtn = findViewById(R.id.bluetooth_page_bottom_nav_btn);
-        ImageButton settingPageBtn = findViewById(R.id.setting_page_bottom_nav_btn);
-        ImageButton mapPageBtn = findViewById(R.id.map_page_bottom_nav_btn);
-        ImageButton drivePageBtn = findViewById(R.id.drive_page_bottom_nav_btn);
-
+        final ImageButton bluetoothPageBtn = findViewById(R.id.bluetooth_page_bottom_nav_btn);
+        final ImageButton settingPageBtn = findViewById(R.id.setting_page_bottom_nav_btn);
+        final ImageButton mapPageBtn = findViewById(R.id.map_page_bottom_nav_btn);
+        //final ImageButton drivePageBtn = findViewById(R.id.drive_page_bottom_nav_btn);
+        mapPageBtn.setSelected(true);
         bluetoothFragment = new BluetoothFragment();
         controlFragment = new ControlFragment();
         settingsFragment = new SettingsFragment();
@@ -58,6 +58,11 @@ public class MainActivity extends AppCompatActivity {
         bluetoothPageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                bluetoothPageBtn.setSelected(true);
+                //drivePageBtn.setSelected(false);
+                settingPageBtn.setSelected(false);
+                mapPageBtn.setSelected(false);
+
                 if(currentPage == BLUETOOTH_PAGE){
                     return;
                 }
@@ -70,6 +75,11 @@ public class MainActivity extends AppCompatActivity {
         mapPageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mapPageBtn.setSelected(true);
+                bluetoothPageBtn.setSelected(false);
+                //drivePageBtn.setSelected(false);
+                settingPageBtn.setSelected(false);
+
                 if(currentPage == CONTROL_PAGE){
                     return;
                 }
@@ -82,6 +92,11 @@ public class MainActivity extends AppCompatActivity {
         settingPageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                settingPageBtn.setSelected(true);
+                mapPageBtn.setSelected(false);
+                bluetoothPageBtn.setSelected(false);
+                //drivePageBtn.setSelected(false);
+
                 if(currentPage == SETTING_PAGE){
                     return;
                 }
@@ -91,17 +106,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        drivePageBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(currentPage == DRIVE_PAGE){
-                    return;
-                }
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, driveFragment).commit();
-                setPageTitle("DRIVE");
-                setCurrentPage(DRIVE_PAGE);
-            }
-        });
+//        drivePageBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                drivePageBtn.setSelected(true);
+//                settingPageBtn.setSelected(false);
+//                mapPageBtn.setSelected(false);
+//                bluetoothPageBtn.setSelected(false);
+//
+//                if(currentPage == DRIVE_PAGE){
+//                    return;
+//                }
+//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, driveFragment).commit();
+//                setPageTitle("DRIVE");
+//                setCurrentPage(DRIVE_PAGE);
+//            }
+//        });
 
         //Create default fragment
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, controlFragment).commit();
